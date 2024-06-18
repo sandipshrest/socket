@@ -6,10 +6,15 @@ const { io } = require("socket.io-client");
 export default function Home() {
   const [name, setName] = useState<string>("");
   const [socket, setSocket] = useState<any>(null);
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     const newSocket = io("http://localhost:5000");
     setSocket(newSocket);
+
+    newSocket.on("name", (name: string) => {
+      setMessage(name);
+    });
 
     return () => {
       newSocket.disconnect();
@@ -19,7 +24,7 @@ export default function Home() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (socket && name) {
-      socket.emit("name", name); // Specify the event name and payload
+      socket.emit("name", name);
     }
   };
 
@@ -37,6 +42,7 @@ export default function Home() {
         />
         <button>Submit</button>
       </form>
+      <p>{message}</p>
     </div>
   );
 }

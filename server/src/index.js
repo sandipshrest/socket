@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
 
   socket.on("name", (name) => {
     console.log("Name received: " + name);
-    io.emit("Name", name);
+    socket.emit("name", name);
   });
 });
 
