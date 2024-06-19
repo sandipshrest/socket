@@ -18,4 +18,24 @@ const registerNewUser = async (req, res) => {
   }
 };
 
-module.exports = { registerNewUser };
+const loginUser = async (req, res) => {
+  try {
+    const userDetail = await User.findOne({ email: req.body.email });
+    if (!userDetail) {
+      return res.status(403).json({ msg: "User is not registered!" });
+    } else {
+      const matched = await bcrypt.compare(
+        req.body.password,
+        userDetail.password
+      );
+      if (!matched) {
+        return res.status(403).json({ msg: "Password didn't match!" });
+      } else {
+        return res.status(201).json({ msg: "Login Successfully", userDetail });
+      }
+    }
+  } catch (err) {
+    res.status(400).json({ msg: "Registration failed" });
+  }
+};
+module.exports = { registerNewUser, loginUser };
