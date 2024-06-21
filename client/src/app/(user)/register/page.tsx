@@ -23,22 +23,22 @@ const Register: React.FC<RegisterProps> = ({}) => {
   const router = useRouter();
 
   const handleRegister = async (values: any) => {
-    const data = {
-      fullName: values.fullName,
-      email: values.email,
-      password: values.password,
-    };
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
-      data
-    );
-    if (response.status === 200) {
-      alert(response.data.msg);
-      router.push("/login");
-    } else {
-      alert(response.data.msg);
-    }
     try {
+      const data = {
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+      };
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
+        data
+      );
+      if (response.status === 200) {
+        alert(response.data.msg);
+        router.push("/login");
+      } else {
+        alert(response.data.msg);
+      }
     } catch (err) {
       console.log(err);
     }
