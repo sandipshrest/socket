@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const { io } = require("socket.io-client");
 
 export default function Home() {
+  const { userDetail } = useSelector((state: any) => state.user);
+  console.log(userDetail);
   const [name, setName] = useState<string>("");
   const [socket, setSocket] = useState<any>(null);
   const [message, setMessage] = useState<string>("");

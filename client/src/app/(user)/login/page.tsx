@@ -4,6 +4,9 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import { loginUser } from "@/redux/reducerSlice/userSlice";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -11,6 +14,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login: React.FC<LoginProps> = ({}) => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleLogin = async (values: any) => {
@@ -23,11 +27,17 @@ const Login: React.FC<LoginProps> = ({}) => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
         data
       );
-      if (response.status === 200) {
-        alert(response.data.msg);
+      if (response.status === 201) {
+        toast.success(response.data.msg);
         router.push("/");
+        dispatch(
+          loginUser({
+            toker: response.data.token,
+            userDetail: response.data.userDetail,
+          })
+        );
       } else {
-        alert(response.data.msg);
+        toast.error(response.data.msg);
       }
     } catch (err) {
       console.log(err);

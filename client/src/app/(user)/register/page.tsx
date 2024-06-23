@@ -4,6 +4,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -33,11 +34,11 @@ const Register: React.FC<RegisterProps> = ({}) => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
         data
       );
-      if (response.status === 200) {
-        alert(response.data.msg);
+      if (response.status === 201) {
+        toast.success(response.data.msg);
         router.push("/login");
       } else {
-        alert(response.data.msg);
+        toast.error(response.data.msg);
       }
     } catch (err) {
       console.log(err);
