@@ -46,7 +46,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
   };
 
   return (
-    <div>
+    <section className="h-screen w-full flex justify-center items-center">
       <Formik
         initialValues={{
           fullName: "",
@@ -60,26 +60,50 @@ const Register: React.FC<RegisterProps> = ({}) => {
         }}
       >
         {({ errors, touched }) => (
-          <Form>
-            <Field name="fullName" />
-            {errors.fullName && touched.fullName ? (
-              <div>{errors.fullName}</div>
-            ) : null}
-            <Field name="email" type="email" />
-            {errors.email && touched.email ? <div>{errors.email}</div> : null}
-            <Field name="password" type="password" />
-            {errors.password && touched.password ? (
-              <div>{errors.password}</div>
-            ) : null}
-            <Field name="rePassword" type="password" />
-            {errors.rePassword && touched.rePassword ? (
-              <div>{errors.rePassword}</div>
-            ) : null}
-            <button type="submit">Submit</button>
+          <Form className="flex flex-col w-1/4 mx-auto p-8 shadow-lg bg-gray-50 rounded-md gap-8">
+            <h2 className="text-3xl font-semibold">Sign Up</h2>
+            <div className="w-full flex flex-col gap-5">
+              <Field
+                name="fullName"
+                placeholder="Enter your full name"
+                className="border-b border-gray-600 focus:outline-none placeholder:text-black p-1"
+              />
+              {errors.fullName && touched.fullName ? (
+                <div className="text-red-600 text-sm">{errors.fullName}</div>
+              ) : null}
+              <Field
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                className="border-b border-gray-600 focus:outline-none placeholder:text-black p-1"
+              />
+              {errors.email && touched.email ? (
+                <div className="text-red-600 text-sm">{errors.email}</div>
+              ) : null}
+              <Field
+                name="password"
+                type="password"
+                placeholder="Create password"
+                className="border-b border-gray-600 focus:outline-none placeholder:text-black p-1"
+              />
+              {errors.password && touched.password ? (
+                <div className="text-red-600 text-sm">{errors.password}</div>
+              ) : null}
+              <Field
+                name="rePassword"
+                type="password"
+                placeholder="Confirm password"
+                className="border-b border-gray-600 focus:outline-none placeholder:text-black p-1"
+              />
+              {errors.rePassword && touched.rePassword ? (
+                <div className="text-red-600 text-sm">{errors.rePassword}</div>
+              ) : null}
+              <button type="submit" className="bg-blue-700 py-2 rounded-md text-white">Register</button>
+            </div>
           </Form>
         )}
       </Formik>
-    </div>
+    </section>
   );
 };
 
