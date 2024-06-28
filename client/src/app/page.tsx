@@ -15,6 +15,7 @@ export default function Home() {
   const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<any[]>([]);
   const [openPopup, setOpenPopup] = useState<null | number>(null);
+  const [receiverEmail, setReceiverEmail] = useState<string>("");
 
   const fetchUserData = async () => {
     try {
@@ -50,13 +51,28 @@ export default function Home() {
     };
   }, []);
 
-  document.body.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      if (socket && message) {
-        socket.emit("message", message);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (socket && message.trim() !== "") {
+          const data = {
+            senderEmail: userDetail.email,
+            receiverEmail: receiverEmail,
+            message: message,
+          };
+          socket.emit("message", data);
+          setMessage(""); // Clear the input field after sending the message
+        }
       }
-    }
-  });
+    };
+
+    document.body.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [socket, message, userDetail, receiverEmail]);
 
   return (
     <div className="container py-12">
@@ -68,7 +84,9 @@ export default function Home() {
             <>
               <div key={id} className="my-1">
                 <button
-                  onClick={() => setOpenPopup(id)}
+                  onClick={() => (
+                    setOpenPopup(id), setReceiverEmail(item.email)
+                  )}
                   className="flex items-center gap-2"
                 >
                   <FaRegUserCircle />
@@ -89,6 +107,7 @@ export default function Home() {
                       type="text"
                       id="message"
                       name="message"
+                      value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       className="border border-gray-400 focus:outline-none p-1 w-full"
                     />

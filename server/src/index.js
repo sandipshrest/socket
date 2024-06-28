@@ -2,6 +2,7 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const userRoute = require("./routes/userRoute");
+const Chat = require("./models/chatModel");
 
 const cors = require("cors");
 const app = express();
@@ -31,9 +32,45 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("message", (message) => {
-    console.log("Message received: " + message);
-    socket.emit("message", message);
+  socket.on("message", async (data) => {
+    try {
+      // find an existing chat where the both sender and receiver are the connected users
+      const existingChat = await Chat.findOne({
+        connectedUsers: {
+          $all: [
+            { $elemMatch: { email: data.senderEmail } },
+            { $elemMatch: { email: data.receiverEmail } },
+          ],
+        },
+      });
+      if (existingChat) {
+        // if exist then add new messate to the chat
+        existingChat.chats.push({
+          senderEmail: data.senderEmail,
+          message: data.message,
+        });
+        await existingChat.save();
+      } else {
+        // if not exist then create new chat document
+        const chatData = {
+          connectedUsers: [
+            { email: data.senderEmail },
+            { email: data.receiverEmail },
+          ],
+          chats: [
+            {
+              senderEmail: data.senderEmail,
+              message: data.message,
+            },
+          ],
+        };
+        await Chat.create(chatData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(data);
+    // socket.emit("message", message);
   });
 });
 
