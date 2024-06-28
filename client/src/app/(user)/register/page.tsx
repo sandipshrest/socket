@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -99,6 +100,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
                 <div className="text-red-600 text-sm">{errors.rePassword}</div>
               ) : null}
               <button type="submit" className="bg-blue-700 py-2 rounded-md text-white">Register</button>
+              <p>Already have an account? <Link href="/login" className="underline font-medium">Sign In</Link></p>
             </div>
           </Form>
         )}

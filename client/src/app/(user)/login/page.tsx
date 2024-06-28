@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { loginUser } from "@/redux/reducerSlice/userSlice";
+import Link from "next/link";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -84,6 +85,7 @@ const Login: React.FC<LoginProps> = ({}) => {
               >
                 Submit
               </button>
+              <p>Don't have an account? <Link href="/register" className="underline font-medium">Create new</Link></p>
             </div>
           </Form>
         )}

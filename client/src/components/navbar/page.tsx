@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const { isLogin, userDetail } = useSelector((state: any) => state.user);
   return (
-    <header className="py-4">
+    <header className="py-4 shadow-md">
       <div className="container flex justify-between items-center">
         <Link href="/">Home</Link>
         {!isLogin ? <Link href="/login">Login</Link> : userDetail.fullName}

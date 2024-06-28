@@ -31,9 +31,9 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("name", (name) => {
-    console.log("Name received: " + name);
-    socket.emit("name", name);
+  socket.on("message", (message) => {
+    console.log("Message received: " + message);
+    socket.emit("message", message);
   });
 });
 

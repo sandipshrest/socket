@@ -47,8 +47,9 @@ const loginUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
+  const myEmail = req.body.user_email;
   try {
-    const userList = await User.find();
+    const userList = await User.find({ email: { $ne: myEmail } });
     return res.status(201).json({ userList });
   } catch (err) {
     res.status(400).json({ msg: "Failed to fetch user list!" });
