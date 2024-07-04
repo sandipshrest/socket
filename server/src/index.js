@@ -2,6 +2,7 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const userRoute = require("./routes/userRoute");
+const chatRoute = require("./routes/chatRoute");
 const Chat = require("./models/chatModel");
 
 const cors = require("cors");
@@ -10,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(userRoute);
+app.use(chatRoute);
 require("dotenv").config();
 
 const connection = require("./db/connection");
@@ -69,8 +71,6 @@ io.on("connection", (socket) => {
     } catch (err) {
       console.log(err);
     }
-    console.log(data);
-    // socket.emit("message", message);
   });
 });
 
