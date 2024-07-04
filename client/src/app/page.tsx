@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import api from "@/api/axios";
 const { io } = require("socket.io-client");
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
   const [users, setUsers] = useState<any[]>([]);
   const [openPopup, setOpenPopup] = useState<null | number>(null);
   const [receiverEmail, setReceiverEmail] = useState<string>("");
+  const [existingChat, setExistingChat] = useState<any[]>([]);
 
   const fetchUserData = async () => {
     try {
@@ -74,6 +76,24 @@ export default function Home() {
     };
   }, [socket, message, userDetail, receiverEmail]);
 
+  const fetchChat = async () => {
+    try {
+      const data = {
+        senderEmail: userDetail.email,
+        receiverEmail: receiverEmail,
+      };
+      const response = await api.post("/chat", data);
+      if (response.status === 201) {
+        setExistingChat(response.data.existingChat.chats);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchChat();
+  }, [userDetail, receiverEmail]);
   return (
     <div className="container py-12">
       {!isLogin ? (
@@ -102,6 +122,22 @@ export default function Home() {
                     <div className="flex flex-col items-center gap-2 w-full">
                       <FaRegUserCircle className="text-4xl" />
                       <p>Chat with {item.fullName}</p>
+                    </div>
+                    <div>
+                      {existingChat.length > 0 &&
+                        existingChat.map((item, id) => (
+                          <div key={id}>
+                            <p
+                              className={`${
+                                item.senderEmail === userDetail.email
+                                  ? "text-red-500"
+                                  : "text-blue-500"
+                              }`}
+                            >
+                              {item.message}
+                            </p>
+                          </div>
+                        ))}
                     </div>
                     <input
                       type="text"

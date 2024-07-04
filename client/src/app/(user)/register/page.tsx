@@ -2,10 +2,10 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import api from "@/api/axios";
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -31,10 +31,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
         email: values.email,
         password: values.password,
       };
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
-        data
-      );
+      const response = await api.post(`/register`, data);
       if (response.status === 201) {
         toast.success(response.data.msg);
         router.push("/login");
@@ -99,8 +96,18 @@ const Register: React.FC<RegisterProps> = ({}) => {
               {errors.rePassword && touched.rePassword ? (
                 <div className="text-red-600 text-sm">{errors.rePassword}</div>
               ) : null}
-              <button type="submit" className="bg-blue-700 py-2 rounded-md text-white">Register</button>
-              <p>Already have an account? <Link href="/login" className="underline font-medium">Sign In</Link></p>
+              <button
+                type="submit"
+                className="bg-blue-700 py-2 rounded-md text-white"
+              >
+                Register
+              </button>
+              <p>
+                Already have an account?{" "}
+                <Link href="/login" className="underline font-medium">
+                  Sign In
+                </Link>
+              </p>
             </div>
           </Form>
         )}

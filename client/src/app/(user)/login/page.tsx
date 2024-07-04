@@ -2,7 +2,7 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import api from "@/api/axios";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -24,10 +24,7 @@ const Login: React.FC<LoginProps> = ({}) => {
         email: values.email,
         password: values.password,
       };
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
-        data
-      );
+      const response = await api.post(`/login`, data);
       if (response.status === 201) {
         toast.success(response.data.msg);
         router.push("/");
@@ -85,7 +82,12 @@ const Login: React.FC<LoginProps> = ({}) => {
               >
                 Submit
               </button>
-              <p>Don't have an account? <Link href="/register" className="underline font-medium">Create new</Link></p>
+              <p>
+                Don't have an account?{" "}
+                <Link href="/register" className="underline font-medium">
+                  Create new
+                </Link>
+              </p>
             </div>
           </Form>
         )}
